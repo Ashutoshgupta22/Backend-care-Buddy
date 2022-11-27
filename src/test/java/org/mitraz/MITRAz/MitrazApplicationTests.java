@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MitrAzApplicationTests {
+class MitrazApplicationTests {
 	
 	@Autowired
 	private NurseDao nurseDao;
@@ -16,9 +16,9 @@ class MitrAzApplicationTests {
 	void addNurse() {
 		
 		Nurse nurse = new Nurse();
-		nurse.setName("Vijay Singh");
-		nurse.setAge(23);
-		nurse.setLocation("ward 25, Whitefield,Bengaluru, 560037");
+		nurse.setName("Billy butcher");
+		nurse.setAge(55);
+		nurse.setLocation("21st street,brooklyn,New york city, 230012");
 		
 		nurseDao.saveNurse(nurse);
 		
