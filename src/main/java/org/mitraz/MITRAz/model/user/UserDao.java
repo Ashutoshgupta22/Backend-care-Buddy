@@ -14,14 +14,18 @@ public class UserDao {
 		assert repository.findById(0).isPresent();
 		return repository.findById(0).get();
 	}
-	public User saveUser(User user) {
-		
+
+	public User registerUser(User user) {
+
+		System.out.println("UserDao registering user email "+user.getEmail());
 		return repository.save(user);
 	}
 	
-	public void deleteUser(User user) {
-		
-		repository.delete(user);
-	}
+//	public void deleteUser(User user) {
+//
+//		repository.delete(user);
+//	}
+
+
 
 }
