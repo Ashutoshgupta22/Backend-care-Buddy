@@ -1,12 +1,14 @@
 package org.mitraz.MITRAz.model.user;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserDao {
-	
-	@Autowired
+
+	//@Autowired
 	private UserRepository repository;
 
 	public User getUser() {
@@ -15,17 +17,14 @@ public class UserDao {
 		return repository.findById(0).get();
 	}
 
-	public User registerUser(User user) {
-
-		System.out.println("UserDao registering user email "+user.getEmail());
+	public User saveUser(User user) {
 		return repository.save(user);
 	}
-	
-//	public void deleteUser(User user) {
+
+//	public User findByEmail(String email) {
 //
-//		repository.delete(user);
+//		assert repository.findByEmail(email).isPresent();
+//		return  repository.findByEmail(email).get();
 //	}
-
-
 
 }
