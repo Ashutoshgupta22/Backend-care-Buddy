@@ -31,7 +31,7 @@ public class SecurityConfig  {
 
         //TODO for production add csrf token and enable csrf
         httpSecurity.csrf().disable()
-                .authorizeHttpRequests().antMatchers("/api/user/registration/**").permitAll()
+                .authorizeHttpRequests().antMatchers("/api/user/registration/**","/api/user/login").permitAll()
                 .anyRequest().authenticated().and().httpBasic();
 
         return httpSecurity.build();

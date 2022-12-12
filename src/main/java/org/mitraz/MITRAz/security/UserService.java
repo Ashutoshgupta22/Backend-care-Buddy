@@ -28,8 +28,6 @@ public class UserService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
 
 
-   // private String token;
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
@@ -63,5 +61,30 @@ public class UserService implements UserDetailsService {
 
     public int enableUser(String email) {
         return userRepository.enableUser(email);
+    }
+
+
+    public String loginUser(User user) {
+
+        System.out.println(user.getEmail() +" "+user.getPassword());
+
+      boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
+
+      if (userExists) {
+
+          String databasePassword = loadUserByUsername(user.getEmail()).getPassword();
+
+          if (bCryptPasswordEncoder.matches(user.getPassword(),databasePassword))
+              return "Authentication successful";
+
+          else {
+                    return "Username or Password did not match.";
+          }
+      }
+      else  {
+          return "User does not exists";
+      }
+
+
     }
 }
