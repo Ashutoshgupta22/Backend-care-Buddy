@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Properties;
 
 
 @Configuration
@@ -27,17 +31,13 @@ public class SecurityConfig  {
 
         //TODO for production add csrf token and enable csrf
         httpSecurity.csrf().disable()
-                .authorizeHttpRequests().antMatchers("/","/api/user/registration").permitAll()
+                .authorizeHttpRequests().antMatchers("/api/user/registration/**").permitAll()
                 .anyRequest().authenticated().and().httpBasic();
 
         return httpSecurity.build();
     }
 
-//    @Bean
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//
-//        auth.authenticationProvider(daoAuthenticationProvider());
-//    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -52,5 +52,23 @@ public class SecurityConfig  {
         provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(userService);
         return provider;
+    }
+
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("asparkofficial@gmail.com");
+        mailSender.setPassword("nbmtwmwgromkpvwh");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
     }
 }

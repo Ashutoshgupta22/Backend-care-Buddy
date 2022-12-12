@@ -22,6 +22,11 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
 	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+	//implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 tasks.named('test') {
