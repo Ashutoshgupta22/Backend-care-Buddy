@@ -14,14 +14,21 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
-    @GetMapping("/user/get")
-    public User getUser() {
-        return userDao.getUser();
-    }
+//    @GetMapping("/user/get")
+//    public User getUser() {
+//        return userDao.getUser();
+//    }
 
-    @PostMapping("/user/save")
-    public User saveUser(@RequestBody User user) {
+//    @PostMapping("/user/save")
+//    public User saveUser(@RequestBody User user) {
+//        return userDao.saveUser(user);
+//    }
 
-        return userDao.saveUser(user);
-    }
+//    @PostMapping("/user/signup")
+//    public User registerUser(@RequestBody User user) {
+//
+//        System.out.println("UserController registering user email "+user.getEmail());
+//        System.out.println("UserController registering user password"+user.getPassword());
+//        return userDao.saveUser(user);
+//    }
 }
