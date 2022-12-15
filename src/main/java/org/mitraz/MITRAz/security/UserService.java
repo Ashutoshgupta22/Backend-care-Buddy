@@ -8,6 +8,7 @@ import org.mitraz.MITRAz.model.user.UserRepository;
 import org.mitraz.MITRAz.registration.token.ConfirmationToken;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -64,9 +66,11 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public String loginUser(User user) {
+    public Map<String, String> loginUser(User user) {
 
+        Map<String,String> response;
         System.out.println(user.getEmail() +" "+user.getPassword());
+        String message,status;
 
       boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
 
@@ -74,17 +78,25 @@ public class UserService implements UserDetailsService {
 
           String databasePassword = loadUserByUsername(user.getEmail()).getPassword();
 
-          if (bCryptPasswordEncoder.matches(user.getPassword(),databasePassword))
-              return "Authentication successful";
-
+          if (bCryptPasswordEncoder.matches(user.getPassword(),databasePassword)) {
+              message = "Authentication successful";
+              status=HttpStatus.OK.toString();
+          }
           else {
-                    return "Username or Password did not match.";
+                    message= "Username or Password did not match.";
+                    status=HttpStatus.UNAUTHORIZED.toString();
           }
       }
       else  {
-          return "User does not exists";
+          message= "User does not exists";
+          status = HttpStatus.UNAUTHORIZED.toString();
       }
 
+       response  = Map.of(
+                "message",message,
+                "status", status
+        );
 
+        return response;
     }
 }

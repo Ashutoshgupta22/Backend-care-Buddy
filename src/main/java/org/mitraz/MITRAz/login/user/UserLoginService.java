@@ -5,13 +5,15 @@ import org.mitraz.MITRAz.model.user.User;
 import org.mitraz.MITRAz.security.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @AllArgsConstructor
 public class UserLoginService {
 
     UserService userService;
 
-    public String loginUser(UserLoginRequest userLoginRequest) {
+    public Map<String, String> loginUser(UserLoginRequest userLoginRequest) {
 
         User user = new User();
         user.setEmail(userLoginRequest.getEmail());
