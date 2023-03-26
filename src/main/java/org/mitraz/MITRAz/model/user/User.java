@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-
+@Getter
+@Setter
 @EqualsAndHashCode
 @Entity
 public class User implements UserDetails {
@@ -38,8 +39,10 @@ public class User implements UserDetails {
 	private String name;
 	@NonNull
 	private int age;
-	@NonNull
-	private String location;
+
+	private double latitude;
+	private double longitude;
+
 	@NonNull
 	private String email;
 	@NonNull
@@ -51,30 +54,6 @@ public class User implements UserDetails {
 	private boolean enabled=false;
 
 
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public UserRole getUserRole() {
-		return userRole;
-	}
-
-	public void setUserRole(UserRole userRole) {
-		this.userRole = userRole;
-	}
-
-	public boolean isLocked() {
-		return locked;
-	}
-
-
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -82,13 +61,13 @@ public class User implements UserDetails {
 		return Collections.singletonList(simpleGrantedAuthority);
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
 	@Override
 	public String getUsername() {
 		return email;
+	}
+
+	public boolean isLocked() {
+		return locked;
 	}
 
 	@Override
@@ -111,22 +90,6 @@ public class User implements UserDetails {
 		return enabled;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	@Override
 	public String toString() {
@@ -134,24 +97,13 @@ public class User implements UserDetails {
 				"id=" + id +
 				", name='" + name + '\'' +
 				", age=" + age +
-				", location='" + location + '\'' +
+				", latitude=" + latitude +
+				", longitude=" + longitude +
 				", email='" + email + '\'' +
 				", password='" + password + '\'' +
+				", userRole=" + userRole +
+				", locked=" + locked +
+				", enabled=" + enabled +
 				'}';
 	}
-
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public String getLocation() {
-		return location;
-	}
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-
 }

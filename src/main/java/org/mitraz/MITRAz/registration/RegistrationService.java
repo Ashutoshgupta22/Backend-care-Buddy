@@ -34,7 +34,6 @@ public class RegistrationService {
         user.setAge(request.getAge());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setLocation(request.getLocation());
         user.setUserRole(UserRole.USER);
 
         String token = userService.signUpUser(user);
