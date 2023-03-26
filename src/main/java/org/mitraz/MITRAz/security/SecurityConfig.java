@@ -2,6 +2,7 @@ package org.mitraz.MITRAz.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -31,7 +32,10 @@ public class SecurityConfig  {
 
         //TODO for production add csrf token and enable csrf
         httpSecurity.csrf().disable()
-                .authorizeHttpRequests().antMatchers("/api/user/registration/**","/api/user/login").permitAll()
+                .authorizeHttpRequests().antMatchers("/api/user/registration/**",
+                        "/api/user/login","/api/user/save-location","/api/user/**","/api/user/book-service",
+                        "/api/nurse/**")
+                .permitAll()
                 .anyRequest().authenticated().and().httpBasic();
 
         return httpSecurity.build();

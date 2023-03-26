@@ -1,15 +1,20 @@
 package org.mitraz.MITRAz.model.nurse;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.mitraz.MITRAz.security.UserRole;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 
 
+@Getter
+@Setter
 @Entity
-public class Nurse {
+public class Nurse implements UserDetails {
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
@@ -18,68 +23,48 @@ public class Nurse {
 	private String name;
 	@NonNull
 	private int age;
-	private String location;
+
+	private double latitude;
+	private double longitude;
+
 	@NonNull
 	private String email;
 	@NonNull
 	private String password;
 
+	@Enumerated(EnumType.STRING)
+	private UserRole userRole;
+	private boolean locked=false;
+	private boolean enabled=false;
 
 
 	@Override
-	public String toString() {
-		return "Nurse{" +
-				"id=" + id +
-				", name='" + name + '\'' +
-				", age=" + age +
-				", location='" + location + '\'' +
-				", email='" + email + '\'' +
-				", password='" + password + '\'' +
-				'}';
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
 	}
 
-	@NonNull
-	public String getEmail() {
-		return email;
+	@Override
+	public String getUsername() {
+		return null;
 	}
 
-	public void setEmail(@NonNull String email) {
-		this.email = email;
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
 	}
 
-	@NonNull
-	public String getPassword() {
-		return password;
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
 	}
 
-	public void setPassword(@NonNull String password) {
-		this.password = password;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
 	}
 
-	public int getId() {
-		return id;
+	@Override
+	public boolean isEnabled() {
+		return false;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public String getLocation() {
-		return location;
-	}
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-
 }

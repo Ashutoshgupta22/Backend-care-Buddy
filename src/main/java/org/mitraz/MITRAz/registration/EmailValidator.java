@@ -12,6 +12,11 @@ public class EmailValidator implements Predicate<String> {
     public boolean test(String s) {
 
         //TODO: Regex to validate
-        return true;
+
+        if (s.contains(" ") || !s.contains("@"))
+            return false;
+        else
+            return true;
+
     }
 }

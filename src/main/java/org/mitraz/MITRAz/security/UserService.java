@@ -1,13 +1,13 @@
 package org.mitraz.MITRAz.security;
 
 import lombok.AllArgsConstructor;
+import org.mitraz.MITRAz.api.LocationData;
 import org.mitraz.MITRAz.exception.EmailExistsException;
+import org.mitraz.MITRAz.model.nurse.NurseRepository;
 import org.mitraz.MITRAz.model.user.User;
-import org.mitraz.MITRAz.model.user.UserDao;
 import org.mitraz.MITRAz.model.user.UserRepository;
 import org.mitraz.MITRAz.registration.token.ConfirmationToken;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,10 +27,10 @@ public class UserService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND_MSG = "user with email %s not found";
 
+    private final NurseRepository nurseRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -98,5 +100,44 @@ public class UserService implements UserDetailsService {
         );
 
         return response;
+    }
+
+    public boolean saveLocation(LocationData locationData) {
+
+        double latitude = locationData.getLatitude();
+        double longitude = locationData.getLongitude();
+        String username = locationData.getUsername();
+
+       int updatedRow = userRepository.saveLocation(latitude,longitude,username);
+
+       System.out.println("saveLocation returned: "+updatedRow);
+
+        return updatedRow == 1;
+    }
+
+    public Map<String, Object> getUserData(String email) {
+
+
+        User user = (User) loadUserByUsername(email);
+
+        Map<String,Object> userMap = new HashMap<>();
+        userMap.put("name", user.getName());
+        userMap.put("email", user.getEmail());
+        userMap.put("latitude",user.getLatitude());
+        userMap.put("longitude",user.getLongitude());
+
+        return userMap;
+    }
+
+    public ArrayList<Double> bookService(String email) {
+
+        ArrayList<Double> latitudeList = nurseRepository.getLatitude();
+        ArrayList<Double> longitudeList = nurseRepository.getLongitude();
+
+        System.out.println(latitudeList.toString());
+        System.out.println(longitudeList.toString());
+
+        return latitudeList;
+
     }
 }
