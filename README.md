@@ -1,2 +1,1 @@
-# MITRAz
-backend for care buddy
+#Backend for Care Buddy
