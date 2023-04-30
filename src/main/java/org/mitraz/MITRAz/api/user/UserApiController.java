@@ -1,8 +1,10 @@
 package org.mitraz.MITRAz.api.user;
 
 import lombok.AllArgsConstructor;
+import org.mitraz.MITRAz.api.BookServiceRequest;
 import org.mitraz.MITRAz.api.LocationData;
-import org.mitraz.MITRAz.security.UserService;
+import org.mitraz.MITRAz.model.nurse.Nurse;
+import org.mitraz.MITRAz.model.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,17 +23,17 @@ public class UserApiController {
         return userService.saveLocation(locationData);
     }
 
-    @GetMapping("{email}")
+    @GetMapping("get-user/{email}")
     public Map<String,Object> getUserData( @PathVariable String email) {
 
         return userService.getUserData(email);
     }
 
-    @GetMapping("{email}/book-service")
-    public ArrayList<Double> bookService(@PathVariable String email){
+    @PostMapping("book-service")
+    public Nurse bookService(@RequestBody BookServiceRequest request){
 
-
-        return userService.bookService(email);
+        System.out.println("book service api call received for "+request.getEmail());
+        return userService.bookService(request.getEmail());
     }
 
 }

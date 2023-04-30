@@ -3,11 +3,14 @@ package org.mitraz.MITRAz.registration;
 
 import lombok.AllArgsConstructor;
 import org.mitraz.MITRAz.email.EmailSender;
+import org.mitraz.MITRAz.model.nurse.Nurse;
+import org.mitraz.MITRAz.model.nurse.NurseService;
 import org.mitraz.MITRAz.model.user.User;
-import org.mitraz.MITRAz.registration.token.ConfirmationToken;
+import org.mitraz.MITRAz.registration.token.ConfirmationTokenNurse;
+import org.mitraz.MITRAz.registration.token.ConfirmationTokenUser;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenService;
 import org.mitraz.MITRAz.security.UserRole;
-import org.mitraz.MITRAz.security.UserService;
+import org.mitraz.MITRAz.model.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,11 +20,12 @@ import java.time.LocalDateTime;
 public class RegistrationService {
 
     private final UserService userService;
+    private final NurseService nurseService;
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    public User register(RegistrationRequest request) {
+    public User registerUser(RegistrationRequest request) {
 
         boolean isValidEmail =  emailValidator.test(request.getEmail());
 
@@ -44,22 +48,68 @@ public class RegistrationService {
         return user;
     }
 
-    public String confirmToken(String token) {
+    public Nurse registerNurse(RegistrationRequest request) {
 
-        ConfirmationToken confirmationToken = confirmationTokenService.getToken(token)
+        boolean isValidEmail =  emailValidator.test(request.getEmail());
+
+        if(!isValidEmail){
+            throw new IllegalStateException("Email not valid");
+        }
+
+        Nurse nurse = new Nurse();
+        nurse.setName(request.getName());
+        nurse.setAge(request.getAge());
+        nurse.setEmail(request.getEmail());
+        nurse.setPassword(request.getPassword());
+        nurse.setPincode(request.getPincode());
+        nurse.setLatitude(request.getLatitude());
+        nurse.setLongitude(request.getLongitude());
+        nurse.setUserRole(UserRole.NURSE);
+
+        String token = nurseService.signUpNurse(nurse);
+
+        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+        emailSender.sendEmail(request.getEmail(),buildEmail(request.getName(),link));
+
+        return nurse;
+    }
+
+    public String confirmUserToken(String token) {
+
+        ConfirmationTokenUser confirmationTokenUser = confirmationTokenService.getUserToken(token)
                 .orElseThrow(()-> new IllegalStateException("Token not found"));
 
-        if(confirmationToken.getConfirmedAt() !=null)
+        if(confirmationTokenUser.getConfirmedAt() !=null)
             throw new IllegalStateException("Email already verified");
 
-        LocalDateTime expiresAt = confirmationToken.getExpiresAt();
+        LocalDateTime expiresAt = confirmationTokenUser.getExpiresAt();
 
         if(expiresAt.isBefore(LocalDateTime.now()))
             throw new IllegalStateException("Token expired");
 
-        confirmationTokenService.setConfirmedAt(token);
+        confirmationTokenService.setUserConfirmedAt(token);
 
-        userService.enableUser(confirmationToken.getUser().getEmail());
+        userService.enableUser(confirmationTokenUser.getUser().getEmail());
+
+        return "Email Verified";
+    }
+
+    public String confirmNurseToken(String token) {
+
+        ConfirmationTokenNurse confirmationTokenNurse = confirmationTokenService.getNurseToken(token)
+                .orElseThrow(()-> new IllegalStateException("Token not found"));
+
+        if(confirmationTokenNurse.getConfirmedAt() !=null)
+            throw new IllegalStateException("Email already verified");
+
+        LocalDateTime expiresAt = confirmationTokenNurse.getExpiresAt();
+
+        if(expiresAt.isBefore(LocalDateTime.now()))
+            throw new IllegalStateException("Token expired");
+
+        confirmationTokenService.setNurseConfirmedAt(token);
+
+        nurseService.enableNurse(confirmationTokenNurse.getNurse().getEmail());
 
         return "Email Verified";
     }

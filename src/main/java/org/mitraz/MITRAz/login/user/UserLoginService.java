@@ -2,7 +2,7 @@ package org.mitraz.MITRAz.login.user;
 
 import lombok.AllArgsConstructor;
 import org.mitraz.MITRAz.model.user.User;
-import org.mitraz.MITRAz.security.UserService;
+import org.mitraz.MITRAz.model.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

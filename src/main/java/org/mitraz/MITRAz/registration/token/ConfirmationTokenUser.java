@@ -4,6 +4,7 @@ package org.mitraz.MITRAz.registration.token;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.mitraz.MITRAz.model.nurse.Nurse;
 import org.mitraz.MITRAz.model.user.User;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
-public class ConfirmationToken {
+public class ConfirmationTokenUser {
 
 
     @SequenceGenerator(
@@ -25,15 +26,17 @@ public class ConfirmationToken {
 			strategy = GenerationType.SEQUENCE,
 			generator = "confirmation_token_sequence"
 	)
-
     private Long id;
 
     @Column(nullable = false)
     private String token;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
     @Column(nullable = false)
     private LocalDateTime expiresAt;
+
     private LocalDateTime confirmedAt;
 
     @ManyToOne
@@ -43,15 +46,13 @@ public class ConfirmationToken {
     )
    private User user;
 
-    public ConfirmationToken( String token, LocalDateTime createdAt,
-                             LocalDateTime expiresAt,User user) {
+
+    public ConfirmationTokenUser(String token, LocalDateTime createdAt,
+                                 LocalDateTime expiresAt, User user) {
 
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.user = user;
-
     }
-
-
 }

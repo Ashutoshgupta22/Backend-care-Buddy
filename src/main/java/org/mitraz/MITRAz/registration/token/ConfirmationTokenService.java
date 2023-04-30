@@ -3,7 +3,6 @@ package org.mitraz.MITRAz.registration.token;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -11,18 +10,33 @@ import java.util.Optional;
 @Service
 public class ConfirmationTokenService {
 
-    private ConfirmationTokenRepository tokenRepository;
+    private ConfirmationTokenUserRepository tokenUserRepository;
+    private ConfirmationTokenNurseRepository tokenNurseRepository;
 
-    public void saveConfirmationToken(ConfirmationToken token) {
+    public void saveConfirmationUserToken(ConfirmationTokenUser token) {
 
-       tokenRepository.save(token);
+       tokenUserRepository.save(token);
     }
 
-    public Optional<ConfirmationToken> getToken(String token) {
-        return tokenRepository.findByToken(token);
+    public void saveConfirmationNurseToken(ConfirmationTokenNurse tokenNurse) {
+
+        tokenNurseRepository.save(tokenNurse);
     }
 
-    public int setConfirmedAt(String token) {
-        return tokenRepository.updateConfirmedAt(token, LocalDateTime.now());
+    public Optional<ConfirmationTokenUser> getUserToken(String token) {
+        return tokenUserRepository.findByToken(token);
+    }
+
+    public Optional<ConfirmationTokenNurse> getNurseToken(String nurseToken) {
+        return tokenNurseRepository.findByToken(nurseToken);
+    }
+
+    public int setUserConfirmedAt(String token) {
+        return tokenUserRepository.updateConfirmedAtUser(token, LocalDateTime.now());
+    }
+
+    public int setNurseConfirmedAt(String nurseToken) {
+
+        return tokenNurseRepository.updateConfirmedAtNurse(nurseToken,LocalDateTime.now());
     }
 }
