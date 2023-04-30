@@ -1,12 +1,12 @@
-package org.mitraz.MITRAz.security;
+package org.mitraz.MITRAz.model.user;
 
 import lombok.AllArgsConstructor;
 import org.mitraz.MITRAz.api.LocationData;
 import org.mitraz.MITRAz.exception.EmailExistsException;
-import org.mitraz.MITRAz.model.nurse.NurseRepository;
-import org.mitraz.MITRAz.model.user.User;
-import org.mitraz.MITRAz.model.user.UserRepository;
-import org.mitraz.MITRAz.registration.token.ConfirmationToken;
+import org.mitraz.MITRAz.exception.UserEmailNotFoundException;
+import org.mitraz.MITRAz.model.nurse.Nurse;
+import org.mitraz.MITRAz.model.nurse.NurseService;
+import org.mitraz.MITRAz.registration.token.ConfirmationTokenUser;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,20 +27,21 @@ public class UserService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND_MSG = "user with email %s not found";
 
-    private final NurseRepository nurseRepository;
+    private final NurseService nurseService;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UserEmailNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
+                .orElseThrow(() -> new UserEmailNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
     }
 
     public String signUpUser(User user) {
 
         boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
+
         if (userExists) {
 
            // throw new IllegalStateException("Email already registered");
@@ -52,11 +53,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
       String  token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token,
+        ConfirmationTokenUser confirmationTokenUser = new ConfirmationTokenUser(token,
                 LocalDateTime.now(), LocalDateTime.now().plusMinutes(15),
                 user);
 
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        confirmationTokenService.saveConfirmationUserToken(confirmationTokenUser);
 
         //TODO :Send email
         return token;
@@ -107,16 +108,19 @@ public class UserService implements UserDetailsService {
         double latitude = locationData.getLatitude();
         double longitude = locationData.getLongitude();
         String username = locationData.getUsername();
+        String pincode = locationData.getPincode();
 
-       int updatedRow = userRepository.saveLocation(latitude,longitude,username);
+       int updatedRow = userRepository.saveLocation(latitude,longitude,pincode,username);
 
        System.out.println("saveLocation returned: "+updatedRow);
 
         return updatedRow == 1;
     }
 
+    //Method for end point
     public Map<String, Object> getUserData(String email) {
 
+        System.out.println("Getting user data");
 
         User user = (User) loadUserByUsername(email);
 
@@ -125,19 +129,27 @@ public class UserService implements UserDetailsService {
         userMap.put("email", user.getEmail());
         userMap.put("latitude",user.getLatitude());
         userMap.put("longitude",user.getLongitude());
+        userMap.put("pincode",user.getPincode());
 
         return userMap;
     }
 
-    public ArrayList<Double> bookService(String email) {
+    public Nurse bookService(String email) {
 
-        ArrayList<Double> latitudeList = nurseRepository.getLatitude();
-        ArrayList<Double> longitudeList = nurseRepository.getLongitude();
+        Map<String,Object> user = getUserData(email);
+        String pincode = user.get("pincode").toString();
 
-        System.out.println(latitudeList.toString());
-        System.out.println(longitudeList.toString());
+        System.out.println("pincode="+pincode);
 
-        return latitudeList;
+        ArrayList<Nurse> nurseList = nurseService.getNurseAtPincode(pincode);
+
+        //TODO if nurseList is empty or null
+        assert nurseList !=null;
+        assert !nurseList.isEmpty();
+        System.out.println("nurseList size="+nurseList.size());
+        System.out.println("nurseList= "+ nurseList.get(0).toString());
+
+        return nurseList.get(0);
 
     }
 }

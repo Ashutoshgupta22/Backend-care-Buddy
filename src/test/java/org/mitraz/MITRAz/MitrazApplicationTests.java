@@ -28,7 +28,7 @@ class MitrazApplicationTests {
 	@Test
 	void getAllNurseLatitude() {
 
-		System.out.println(nurseRepository.getLatitude().toString());
+		//System.out.println(nurseRepository.getLatitude().toString());
 	}
 
 }
