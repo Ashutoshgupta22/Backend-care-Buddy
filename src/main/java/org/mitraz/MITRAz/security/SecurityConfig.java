@@ -1,15 +1,13 @@
 package org.mitraz.MITRAz.security;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.mitraz.MITRAz.model.user.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +31,7 @@ public class SecurityConfig  {
         //TODO for production add csrf token and enable csrf
         httpSecurity.csrf().disable()
                 .authorizeHttpRequests().antMatchers("/api/user/registration/**",
-                        "/api/user/login","/api/user/save-location","/api/user/**","/api/user/book-service",
+                        "/api/user/login","/api/user/save-location","/api/user/**","/api/user/book-service/**",
                         "/api/nurse/**")
                 .permitAll()
                 .anyRequest().authenticated().and().httpBasic();
@@ -65,7 +63,7 @@ public class SecurityConfig  {
         mailSender.setPort(587);
 
         mailSender.setUsername("asparkofficial@gmail.com");
-        mailSender.setPassword("nbmtwmwgromkpvwh");
+        mailSender.setPassword("fpiqmulaqzsdxkmp");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

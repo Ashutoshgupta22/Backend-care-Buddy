@@ -26,6 +26,7 @@ public class Nurse implements UserDetails {
 
 	private double latitude;
 	private double longitude;
+	private String pincode;
 
 	@NonNull
 	private String email;

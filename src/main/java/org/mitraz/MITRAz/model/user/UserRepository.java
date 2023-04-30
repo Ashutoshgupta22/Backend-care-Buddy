@@ -25,9 +25,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE User SET latitude=?1, longitude=?2 WHERE email=?3",
+    @Query(value = "UPDATE User SET latitude=?1, longitude=?2, pincode=?3 WHERE email=?4",
     nativeQuery = true)
-    int saveLocation( double latitude, double longitude,String username);
+    int saveLocation( double latitude, double longitude,String pincode,String username);
 
 
 

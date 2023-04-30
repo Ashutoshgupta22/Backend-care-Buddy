@@ -15,5 +15,7 @@ public class RegistrationRequest {
     private final int age;
     private final String email;
     private final String password;
-    private final String location;
+    private final String pincode;
+    private final Double latitude;
+    private final Double longitude;
 }
