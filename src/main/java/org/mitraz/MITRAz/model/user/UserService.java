@@ -1,9 +1,9 @@
 package org.mitraz.MITRAz.model.user;
 
 import lombok.AllArgsConstructor;
-import org.mitraz.MITRAz.api.LocationData;
+import org.mitraz.MITRAz.api.request.LocationData;
 import org.mitraz.MITRAz.exception.EmailExistsException;
-import org.mitraz.MITRAz.exception.UserEmailNotFoundException;
+import org.mitraz.MITRAz.exception.EmailNotFoundException;
 import org.mitraz.MITRAz.model.nurse.Nurse;
 import org.mitraz.MITRAz.model.nurse.NurseService;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenUser;
@@ -11,7 +11,6 @@ import org.mitraz.MITRAz.registration.token.ConfirmationTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private static final String USER_NOT_FOUND_MSG = "user with email %s not found";
+    public static final String USER_NOT_FOUND_MSG = "user with email %s not found";
 
     private final NurseService nurseService;
     private final UserRepository userRepository;
@@ -33,9 +32,9 @@ public class UserService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UserEmailNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserEmailNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
+                .orElseThrow(() -> new EmailNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
     }
 
     public String signUpUser(User user) {
@@ -79,9 +78,9 @@ public class UserService implements UserDetailsService {
 
       if (userExists) {
 
-          String databasePassword = loadUserByUsername(user.getEmail()).getPassword();
+          String dbPassword = loadUserByUsername(user.getEmail()).getPassword();
 
-          if (bCryptPasswordEncoder.matches(user.getPassword(),databasePassword)) {
+          if (bCryptPasswordEncoder.matches(user.getPassword(),dbPassword)) {
               message = "Authentication successful";
               status=HttpStatus.OK.toString();
           }

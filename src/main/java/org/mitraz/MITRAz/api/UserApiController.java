@@ -1,13 +1,12 @@
-package org.mitraz.MITRAz.api.user;
+package org.mitraz.MITRAz.api;
 
 import lombok.AllArgsConstructor;
-import org.mitraz.MITRAz.api.BookServiceRequest;
-import org.mitraz.MITRAz.api.LocationData;
+import org.mitraz.MITRAz.api.request.BookServiceRequest;
+import org.mitraz.MITRAz.api.request.LocationData;
 import org.mitraz.MITRAz.model.nurse.Nurse;
 import org.mitraz.MITRAz.model.user.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 @AllArgsConstructor

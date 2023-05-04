@@ -31,8 +31,5 @@ public interface NurseRepository extends JpaRepository<Nurse, Integer> {
     @Query(value = "UPDATE Nurse n set n.enabled = TRUE where n.email=?1")
     int enableNurse(String email);
 
-//    @Query(value = "SELECT longitude FROM nurse order by longitude",
-//            nativeQuery = true)
-//    ArrayList<Double> getLongitude();
 
 }

@@ -1,4 +1,4 @@
-package org.mitraz.MITRAz.api;
+package org.mitraz.MITRAz.api.request;
 
 import lombok.Getter;
 
