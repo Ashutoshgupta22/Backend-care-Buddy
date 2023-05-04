@@ -1,4 +1,4 @@
-package org.mitraz.MITRAz.login.user;
+package org.mitraz.MITRAz.api.request;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class UserLoginRequest {
+public class LoginRequest {
 
     private final String email;
     private final String password;

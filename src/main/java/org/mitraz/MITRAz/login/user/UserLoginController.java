@@ -1,7 +1,7 @@
 package org.mitraz.MITRAz.login.user;
 
 import lombok.AllArgsConstructor;
-import org.mitraz.MITRAz.model.user.User;
+import org.mitraz.MITRAz.api.request.LoginRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +17,9 @@ public class UserLoginController {
     private UserLoginService userLoginService;
 
     @PostMapping
-    public Map<String, String> loginUser(@RequestBody UserLoginRequest userLoginRequest) {
+    public Map<String, String> loginUser(@RequestBody LoginRequest loginRequest) {
 
-      return   userLoginService.loginUser(userLoginRequest);
+      return   userLoginService.loginUser(loginRequest);
 
     }
 }

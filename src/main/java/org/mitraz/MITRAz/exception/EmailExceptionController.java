@@ -21,8 +21,8 @@ public class EmailExceptionController {
         return new  ResponseEntity<>(errorResponse,HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(value = UserEmailNotFoundException.class)
-    public ResponseEntity<Map<String,String>> notFoundException(UserEmailNotFoundException e) {
+    @ExceptionHandler(value = EmailNotFoundException.class)
+    public ResponseEntity<Map<String,String>> notFoundException(EmailNotFoundException e) {
 
         Map<String,String> errorResponse = Map.of(
                 "message","User not found",
