@@ -9,6 +9,7 @@ import org.mitraz.MITRAz.model.nurse.NurseService;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenUser;
 import org.mitraz.MITRAz.registration.token.ConfirmationTokenService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,38 +69,26 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public Map<String, String> loginUser(User user) {
+    public ResponseEntity<User> loginUser(User user) {
 
-        Map<String,String> response;
         System.out.println(user.getEmail() +" "+user.getPassword());
-        String message,status;
 
-      boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
+        boolean isUserPresent = userRepository.findByEmail(user.getEmail()).isPresent();
 
-      if (userExists) {
+        if (isUserPresent) {
 
-          String dbPassword = loadUserByUsername(user.getEmail()).getPassword();
+            User dbUser = (User) loadUserByUsername(user.getEmail());
+            String dbPassword = dbUser.getPassword();
 
-          if (bCryptPasswordEncoder.matches(user.getPassword(),dbPassword)) {
-              message = "Authentication successful";
-              status=HttpStatus.OK.toString();
-          }
-          else {
-                    message= "Username or Password did not match.";
-                    status=HttpStatus.UNAUTHORIZED.toString();
-          }
-      }
-      else  {
-          message= "User does not exists";
-          status = HttpStatus.UNAUTHORIZED.toString();
-      }
+            if (bCryptPasswordEncoder.matches(user.getPassword(), dbPassword))
+                return new ResponseEntity<>(dbUser,HttpStatus.OK);
 
-       response  = Map.of(
-                "message",message,
-                "status", status
-        );
+            else
+                return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
 
-        return response;
+        } else
+            return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+
     }
 
     public boolean saveLocation(LocationData locationData) {
