@@ -47,7 +47,7 @@ public class NurseService {
 				return ResponseEntity.ok().body(dbNurse);
 
 			else
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 		}
 		else
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
