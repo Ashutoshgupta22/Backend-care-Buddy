@@ -29,6 +29,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query(value = "update User set firebase_token=?1 where email=?2", nativeQuery = true)
-    boolean setFirebaseToken( String firebaseToken, String email);
+    int setFirebaseToken( String firebaseToken, String email);
 
 }

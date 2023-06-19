@@ -1,6 +1,7 @@
 package com.aspark.carebuddy.firebase;
 
 import com.aspark.carebuddy.exception.FirebaseException;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -10,6 +11,9 @@ public class FirebaseCloudMessaging {
 
    // @SneakyThrows
     public void sendNotification(String registrationToken) {
+
+        System.out.println("FCM sendNotification called ");
+        System.out.println("registration token: " + registrationToken);
 
         Message notification = Message.builder()
                 .setNotification(Notification.builder()
@@ -24,6 +28,7 @@ public class FirebaseCloudMessaging {
             System.out.println("Successfully sent message " + response );
         }
         catch (FirebaseMessagingException e) {
+            System.out.println("FCM Error: " + e);
             throw new FirebaseException(e);
         }
 

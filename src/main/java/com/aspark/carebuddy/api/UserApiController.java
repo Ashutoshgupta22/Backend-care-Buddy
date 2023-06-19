@@ -20,6 +20,9 @@ public class UserApiController {
     public Boolean setUserFirebaseToken(@PathVariable String email,
                                         @RequestBody String firebaseToken) {
 
+        if (firebaseToken.startsWith("\"") && firebaseToken.endsWith("\"")){
+           firebaseToken = firebaseToken.replaceAll("\"","");
+        }
         return userService.setFirebaseToken(email, firebaseToken);
 
     }
