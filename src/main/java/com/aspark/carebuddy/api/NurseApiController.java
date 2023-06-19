@@ -16,8 +16,12 @@ public class NurseApiController {
     NurseService nurseService;
 
     @PostMapping("/set-firebase-token/{email}")
-    public Boolean setUserFirebaseToken(@PathVariable String email,
+    public Boolean setNurseFirebaseToken(@PathVariable String email,
                                         @RequestBody String firebaseToken) {
+
+        if (firebaseToken.startsWith("\"") && firebaseToken.endsWith("\"")){
+            firebaseToken = firebaseToken.replaceAll("\"","");
+        }
 
         return nurseService.setFirebaseToken(email, firebaseToken);
 

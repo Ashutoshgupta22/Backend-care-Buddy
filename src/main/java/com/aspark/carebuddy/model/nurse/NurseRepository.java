@@ -32,8 +32,7 @@ public interface NurseRepository extends JpaRepository<Nurse, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "update Nurse set firebase_token=?1 where email=?2", nativeQuery = true)
-    boolean setFirebaseToken( String firebaseToken, String email);
-
+    @Query(value = "update Nurse set firebase_token=?2 where email=?1", nativeQuery = true)
+    int setFirebaseToken( String email, String firebaseToken);
 
 }

@@ -48,6 +48,7 @@ public class SecurityConfig  {
     }
 
 
+    //TODO What does this method do?
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
 
@@ -73,10 +74,5 @@ public class SecurityConfig  {
         props.put("mail.debug", "true");
 
         return mailSender;
-    }
-
-    @Bean
-    public FirebaseCloudMessaging firebaseCloudMessaging() {
-        return new FirebaseCloudMessaging();
     }
 }

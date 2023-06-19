@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
-    private final FirebaseCloudMessaging firebaseCloudMessaging;
+    private final FirebaseCloudMessaging firebaseCloudMessaging ;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
@@ -145,11 +145,11 @@ public class UserService implements UserDetailsService {
         firebaseCloudMessaging.sendNotification(firebaseToken);
 
         return selectedNurse;
-
     }
 
     public Boolean setFirebaseToken(String email, String firebaseToken) {
 
-        return userRepository.setFirebaseToken(firebaseToken, email);
+        int success = userRepository.setFirebaseToken(firebaseToken, email);
+        return success == 1;
     }
 }

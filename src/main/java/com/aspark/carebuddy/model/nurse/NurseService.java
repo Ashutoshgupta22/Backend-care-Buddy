@@ -100,6 +100,7 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 
     public Boolean setFirebaseToken(String email, String firebaseToken) {
 
-		return nurseRepository.setFirebaseToken(email, firebaseToken);
+		int success = nurseRepository.setFirebaseToken(email, firebaseToken);
+		return success == 1;
     }
 }
