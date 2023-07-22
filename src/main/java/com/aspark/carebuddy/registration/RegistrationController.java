@@ -12,8 +12,8 @@ public class RegistrationController {
 
     private RegistrationService registrationService;
 
-    @PostMapping("user/registration")
-    public User registerUser(@RequestBody RegistrationRequest request) {
+    @PostMapping("user/signup")
+    public Boolean registerUser(@RequestBody RegistrationRequest request) {
 
         return registrationService.registerUser(request);
     }

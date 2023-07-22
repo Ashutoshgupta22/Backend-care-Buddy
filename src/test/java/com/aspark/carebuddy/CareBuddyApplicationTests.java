@@ -1,6 +1,6 @@
 package com.aspark.carebuddy;
 
-import com.aspark.carebuddy.model.nurse.NurseRepository;
+import com.aspark.carebuddy.repository.NurseRepository;
 import com.aspark.carebuddy.model.nurse.NurseService;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;

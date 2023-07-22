@@ -34,7 +34,11 @@ public class User implements UserDetails {
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private int id;
 	@NonNull
-	private String name;
+	@Column(name = "first_name")
+	private String firstName;
+	@NonNull
+	@Column(name = "last_name")
+	private String lastName;
 	@NonNull
 	private int age;
 
@@ -98,7 +102,7 @@ public class User implements UserDetails {
 	public String toString() {
 		return "User{" +
 				"id=" + id +
-				", name='" + name + '\'' +
+				", name='" + firstName + '\'' +
 				", age=" + age +
 				", latitude=" + latitude +
 				", longitude=" + longitude +

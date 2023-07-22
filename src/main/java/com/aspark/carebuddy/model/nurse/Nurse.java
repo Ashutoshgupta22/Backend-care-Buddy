@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 
-
 @Getter
 @Setter
 @Entity
@@ -20,7 +19,11 @@ public class Nurse implements UserDetails {
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private int id;
 	@NonNull
-	private String name;
+	@Column(name = "first_name")
+	private String firstName;
+	@NonNull
+	@Column(name = "last_name")
+	private String lastName;
 	private int age;
 
 	private double latitude;
@@ -31,6 +34,19 @@ public class Nurse implements UserDetails {
 	private String email;
 	@NonNull
 	private String password;
+
+	@NonNull
+	private double rating;
+	@NonNull
+	private String biography;
+	@NonNull
+	private int patientNo;
+	@NonNull
+	private int experience;
+	@NonNull
+	private String qualifications;
+	@NonNull
+	private String specialities;
 
 	@NonNull
 	@Column(name = "firebase_token")

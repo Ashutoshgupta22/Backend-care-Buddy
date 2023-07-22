@@ -25,7 +25,7 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    public User registerUser(RegistrationRequest request) {
+    public Boolean registerUser(RegistrationRequest request) {
 
         boolean isValidEmail =  emailValidator.test(request.getEmail());
 
@@ -34,7 +34,8 @@ public class RegistrationService {
         }
 
         User user = new User();
-        user.setName(request.getName());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setAge(request.getAge());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
@@ -44,9 +45,9 @@ public class RegistrationService {
         String token = userService.signUpUser(user);
 
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        emailSender.sendEmail(request.getEmail(),buildEmail(request.getName(),link));
+        emailSender.sendEmail(request.getEmail(),buildEmail(request.getFirstName(),link));
 
-        return user;
+        return true;
     }
 
     public Nurse registerNurse(RegistrationRequest request) {
@@ -58,7 +59,8 @@ public class RegistrationService {
         }
 
         Nurse nurse = new Nurse();
-        nurse.setName(request.getName());
+        nurse.setFirstName(request.getFirstName());
+        nurse.setLastName(request.getLastName());
         nurse.setAge(request.getAge());
         nurse.setEmail(request.getEmail());
         nurse.setPassword(request.getPassword());
@@ -70,7 +72,7 @@ public class RegistrationService {
         String token = nurseService.signUpNurse(nurse);
 
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        emailSender.sendEmail(request.getEmail(),buildEmail(request.getName(),link));
+        emailSender.sendEmail(request.getEmail(),buildEmail(request.getFirstName(),link));
 
         return nurse;
     }

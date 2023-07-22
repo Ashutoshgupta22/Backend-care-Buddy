@@ -1,4 +1,4 @@
-package com.aspark.carebuddy.api;
+package com.aspark.carebuddy.controller;
 
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.request.LoginRequest;

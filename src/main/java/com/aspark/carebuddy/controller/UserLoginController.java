@@ -1,6 +1,7 @@
-package com.aspark.carebuddy.login.user;
+package com.aspark.carebuddy.controller;
 
 import com.aspark.carebuddy.api.request.LoginRequest;
+import com.aspark.carebuddy.login.user.UserLoginService;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.model.user.User;
 import org.springframework.http.ResponseEntity;

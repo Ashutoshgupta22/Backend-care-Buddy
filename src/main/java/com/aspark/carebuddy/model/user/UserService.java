@@ -8,6 +8,7 @@ import com.aspark.carebuddy.model.nurse.Nurse;
 import com.aspark.carebuddy.model.nurse.NurseService;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenService;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenUser;
+import com.aspark.carebuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,26 +109,19 @@ public class UserService implements UserDetailsService {
     }
 
     //Method for end point
-    public Map<String, Object> getUserData(String email) {
+    public ResponseEntity<User> getUserData(String email) {
 
         System.out.println("Getting user data");
 
         User user = (User) loadUserByUsername(email);
 
-        Map<String,Object> userMap = new HashMap<>();
-        userMap.put("name", user.getName());
-        userMap.put("email", user.getEmail());
-        userMap.put("latitude",user.getLatitude());
-        userMap.put("longitude",user.getLongitude());
-        userMap.put("pincode",user.getPincode());
-
-        return userMap;
+        return ResponseEntity.ok(user);
     }
 
     public Nurse bookService(String email) {
 
-        Map<String,Object> user = getUserData(email);
-        String pincode = user.get("pincode").toString();
+        User user = (User) loadUserByUsername(email);
+        String pincode = user.getPincode();
 
         System.out.println("pincode="+pincode);
 
@@ -151,5 +145,11 @@ public class UserService implements UserDetailsService {
 
         int success = userRepository.setFirebaseToken(firebaseToken, email);
         return success == 1;
+    }
+
+    public ArrayList<Nurse> getTopNurses(String pincode) {
+
+        System.out.println("Getting top nurses");
+        return  nurseService.getTopNurses(pincode);
     }
 }
