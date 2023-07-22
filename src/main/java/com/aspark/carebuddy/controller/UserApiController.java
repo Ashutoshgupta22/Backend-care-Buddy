@@ -1,12 +1,15 @@
-package com.aspark.carebuddy.api;
+package com.aspark.carebuddy.controller;
 
 import com.aspark.carebuddy.api.request.BookServiceRequest;
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.model.nurse.Nurse;
+import com.aspark.carebuddy.model.user.User;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.model.user.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -34,7 +37,7 @@ public class UserApiController {
     }
 
     @GetMapping("get-user/{email}")
-    public Map<String,Object> getUserData( @PathVariable String email) {
+    public ResponseEntity<User> getUserData(@PathVariable String email) {
 
         return userService.getUserData(email);
     }
@@ -44,6 +47,12 @@ public class UserApiController {
 
         System.out.println("book service api call received for "+request.getEmail());
         return userService.bookService(request.getEmail());
+    }
+
+    @GetMapping("get-top-nurses/{pincode}")
+    public ArrayList<Nurse> getTopNurses(@PathVariable String pincode) {
+
+        return userService.getTopNurses(pincode);
     }
 
 }

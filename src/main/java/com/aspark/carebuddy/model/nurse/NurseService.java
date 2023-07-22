@@ -5,6 +5,7 @@ import com.aspark.carebuddy.api.request.LoginRequest;
 import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenNurse;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenService;
+import com.aspark.carebuddy.repository.NurseRepository;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.exception.EmailExistsException;
 import org.springframework.http.HttpStatus;
@@ -103,4 +104,9 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		int success = nurseRepository.setFirebaseToken(email, firebaseToken);
 		return success == 1;
     }
+
+	public ArrayList<Nurse> getTopNurses(String pincode) {
+
+		return nurseRepository.getTopNurses(pincode);
+	}
 }

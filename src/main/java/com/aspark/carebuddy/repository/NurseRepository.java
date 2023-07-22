@@ -1,5 +1,6 @@
-package com.aspark.carebuddy.model.nurse;
+package com.aspark.carebuddy.repository;
 
+import com.aspark.carebuddy.model.nurse.Nurse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,6 +25,10 @@ public interface NurseRepository extends JpaRepository<Nurse, Integer> {
     @Query(value = "SELECT * FROM nurse where pincode=?1",
             nativeQuery = true)
     ArrayList<Nurse> getNurseAtPincode(String pincode);
+
+    @Query(value = "SELECT * FROM nurse where pincode=?1 and rating >= 4.5",
+            nativeQuery = true)
+    ArrayList<Nurse> getTopNurses(String pincode);
 
     @Transactional
     @Modifying

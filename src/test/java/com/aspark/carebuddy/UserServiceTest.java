@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.aspark.carebuddy.model.user.UserRepository;
+import com.aspark.carebuddy.repository.UserRepository;
 import com.aspark.carebuddy.model.user.UserService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
