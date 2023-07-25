@@ -9,11 +9,16 @@ import com.aspark.carebuddy.registration.token.ConfirmationTokenNurse;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenService;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenUser;
 import com.aspark.carebuddy.security.UserRole;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.model.user.UserService;
+import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 @AllArgsConstructor
@@ -50,7 +55,7 @@ public class RegistrationService {
         return true;
     }
 
-    public Nurse registerNurse(RegistrationRequest request) {
+    public Nurse signupNurse(RegistrationRequest request) {
 
         boolean isValidEmail =  emailValidator.test(request.getEmail());
 
@@ -58,10 +63,17 @@ public class RegistrationService {
             throw new IllegalStateException("Email not valid");
         }
 
+        Gson gson = new Gson();
+        String specialitiesJson = gson.toJson(request.getSpecialities());
+
         Nurse nurse = new Nurse();
         nurse.setFirstName(request.getFirstName());
         nurse.setLastName(request.getLastName());
         nurse.setAge(request.getAge());
+        nurse.setBiography(request.getBiography());
+        nurse.setQualifications(request.getQualifications());
+        nurse.setExperience(request.getExperience());
+        nurse.setSpecialities(specialitiesJson);
         nurse.setEmail(request.getEmail());
         nurse.setPassword(request.getPassword());
         nurse.setPincode(request.getPincode());
@@ -73,6 +85,9 @@ public class RegistrationService {
 
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
         emailSender.sendEmail(request.getEmail(),buildEmail(request.getFirstName(),link));
+
+        Type typeList = new TypeToken<ArrayList<String>>() {}.getType();
+        ArrayList<String> specialitiesList = gson.fromJson(nurse.getSpecialities(), typeList);
 
         return nurse;
     }

@@ -1,7 +1,6 @@
 package com.aspark.carebuddy.registration;
 
 import com.aspark.carebuddy.model.nurse.Nurse;
-import com.aspark.carebuddy.model.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +17,10 @@ public class RegistrationController {
         return registrationService.registerUser(request);
     }
 
-    @PostMapping("nurse/registration")
+    @PostMapping("nurse/signup")
     public Nurse registerNurse(@RequestBody RegistrationRequest request) {
 
-        return registrationService.registerNurse(request);
+        return registrationService.signupNurse(request);
     }
 
     @GetMapping(path = "confirm-user")
