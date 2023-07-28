@@ -21,9 +21,9 @@ public class Nurse implements UserDetails {
 	@NonNull
 	@Column(name = "first_name")
 	private String firstName;
-	@NonNull
-	@Column(name = "last_name")
-	private String lastName;
+
+	@Column(name = "last_name", nullable = false)
+	private String lastName="";
 	private int age;
 
 	private double latitude;

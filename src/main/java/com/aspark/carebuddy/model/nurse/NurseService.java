@@ -2,10 +2,14 @@ package com.aspark.carebuddy.model.nurse;
 
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.request.LoginRequest;
+import com.aspark.carebuddy.api.response.NurseResponse;
+import com.aspark.carebuddy.email.EmailSender;
 import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenNurse;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenService;
 import com.aspark.carebuddy.repository.NurseRepository;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.exception.EmailExistsException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -26,6 +31,7 @@ public class NurseService {
 	private NurseRepository nurseRepository;
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	private ConfirmationTokenService confirmationTokenService;
+	private final EmailSender emailSender;
 
 
 	public Nurse loadNurseByEmail(String email) throws EmailNotFoundException {
@@ -35,7 +41,7 @@ public class NurseService {
 	}
 
 
-	public ResponseEntity<Nurse> loginNurse(LoginRequest loginRequest) {
+	public ResponseEntity<NurseResponse> loginNurse(LoginRequest loginRequest) {
 
 		boolean isNursePresent =  nurseRepository.findByEmail(loginRequest.getEmail()).isPresent();
 
@@ -44,8 +50,11 @@ public class NurseService {
 			Nurse dbNurse =  loadNurseByEmail(loginRequest.getEmail());
 			String dbPassword = dbNurse.getPassword();
 
-			if (bCryptPasswordEncoder.matches(loginRequest.getPassword(),dbPassword))
-				return ResponseEntity.ok().body(dbNurse);
+			if (bCryptPasswordEncoder.matches(loginRequest.getPassword(),dbPassword)) {
+
+				NurseResponse response = parseSpecialitiesJson(dbNurse);
+				return ResponseEntity.ok().body(response);
+			}
 
 			else
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
@@ -53,6 +62,8 @@ public class NurseService {
 		else
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 	}
+
+
 
 	public boolean nurseSaveLocation(LocationData locationData) {
 
@@ -71,7 +82,7 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		return nurseRepository.getNurseAtPincode(pincode);
 	}
 
-	public String signUpNurse(Nurse nurse) {
+	public Nurse signUpNurse(Nurse nurse) {
 
 		boolean nurseExists = nurseRepository.findByEmail(nurse.getEmail()).isPresent();
 
@@ -90,7 +101,10 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		confirmationTokenService.saveConfirmationNurseToken(confirmationTokenNurse);
 
 		//TODO :Send email
-		return token;
+		String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+		emailSender.sendEmail(savedNurse.getEmail(),buildEmail(savedNurse.getFirstName(),link));
+
+		return savedNurse;
 	}
 
 	public int enableNurse(String email) {
@@ -105,9 +119,40 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		return success == 1;
     }
 
-	public ArrayList<Nurse> getTopNurses(String pincode) {
+	public ArrayList<NurseResponse> getTopNurses(String pincode) {
 
-		return nurseRepository.getTopNurses(pincode);
+		System.out.println("Getting top nurses");
+
+		ArrayList<Nurse> nurseList = nurseRepository.getTopNurses(pincode);
+		ArrayList<NurseResponse> responseList = new ArrayList<>();
+
+		for  (Nurse nurse : nurseList) {
+
+			NurseResponse response = parseSpecialitiesJson(nurse);
+			responseList.add(response);
+		}
+
+		return responseList;
+	}
+
+	public String confirmNurseToken(String token) {
+
+		ConfirmationTokenNurse confirmationTokenNurse = confirmationTokenService.getNurseToken(token)
+				.orElseThrow(()-> new IllegalStateException("Token not found"));
+
+		if(confirmationTokenNurse.getConfirmedAt() !=null)
+			throw new IllegalStateException("Email already verified");
+
+		LocalDateTime expiresAt = confirmationTokenNurse.getExpiresAt();
+
+		if(expiresAt.isBefore(LocalDateTime.now()))
+			throw new IllegalStateException("Token expired");
+
+		confirmationTokenService.setNurseConfirmedAt(token);
+
+		enableNurse(confirmationTokenNurse.getNurse().getEmail());
+
+		return "Email Verified";
 	}
 
 	private String buildEmail(String name, String link) {
@@ -177,6 +222,32 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 				"  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
 				"\n" +
 				"</div></div>";
+	}
+
+	private NurseResponse parseSpecialitiesJson(Nurse nurse) {
+		NurseResponse response = new NurseResponse();
+
+		Type typeList = new TypeToken<ArrayList<String>>() {}.getType();
+		Gson gson = new Gson();
+		// parse json string to arraylist
+		ArrayList<String> specialitiesList = gson.fromJson(nurse.getSpecialities(), typeList);
+
+		response.setFirstName(nurse.getFirstName());
+		response.setLastName(nurse.getLastName());
+		response.setAge(nurse.getAge());
+		response.setEmail(nurse.getEmail());
+		response.setRating(nurse.getRating());
+		response.setPatientNo(nurse.getPatientNo());
+		response.setExperience(nurse.getExperience());
+		response.setBiography(nurse.getBiography());
+		response.setSpecialities(specialitiesList);
+		response.setQualifications(nurse.getQualifications());
+		response.setPincode(nurse.getPincode());
+		response.setLatitude(nurse.getLatitude());
+		response.setLongitude(nurse.getLongitude());
+		response.setFirebaseToken(nurse.getFirebaseToken());
+
+		return response;
 	}
 
 }
