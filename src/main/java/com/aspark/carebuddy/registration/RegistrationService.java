@@ -1,6 +1,7 @@
 package com.aspark.carebuddy.registration;
 
 
+import com.aspark.carebuddy.api.response.NurseResponse;
 import com.aspark.carebuddy.email.EmailSender;
 import com.aspark.carebuddy.model.nurse.Nurse;
 import com.aspark.carebuddy.model.nurse.NurseService;
@@ -32,9 +33,9 @@ public class RegistrationService {
 
     public Boolean registerUser(RegistrationRequest request) {
 
-        boolean isValidEmail =  emailValidator.test(request.getEmail());
+        boolean isValidEmail = emailValidator.test(request.getEmail());
 
-        if(!isValidEmail){
+        if (!isValidEmail) {
             throw new IllegalStateException("Email not valid");
         }
 
@@ -50,16 +51,16 @@ public class RegistrationService {
         String token = userService.signUpUser(user);
 
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        emailSender.sendEmail(request.getEmail(),buildEmail(request.getFirstName(),link));
+        emailSender.sendEmail(request.getEmail(), buildEmail(request.getFirstName(), link));
 
         return true;
     }
 
-    public Nurse signupNurse(RegistrationRequest request) {
+    public RegistrationRequest signupNurse(RegistrationRequest request) {
 
-        boolean isValidEmail =  emailValidator.test(request.getEmail());
+        boolean isValidEmail = emailValidator.test(request.getEmail());
 
-        if(!isValidEmail){
+        if (!isValidEmail) {
             throw new IllegalStateException("Email not valid");
         }
 
@@ -81,28 +82,28 @@ public class RegistrationService {
         nurse.setLongitude(request.getLongitude());
         nurse.setUserRole(UserRole.NURSE);
 
-        String token = nurseService.signUpNurse(nurse);
+        Nurse savedNurse = nurseService.signUpNurse(nurse);
 
-        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
-        emailSender.sendEmail(request.getEmail(),buildEmail(request.getFirstName(),link));
+//        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+//        emailSender.sendEmail(request.getEmail(), buildEmail(request.getFirstName(), link));
 
-        Type typeList = new TypeToken<ArrayList<String>>() {}.getType();
-        ArrayList<String> specialitiesList = gson.fromJson(nurse.getSpecialities(), typeList);
+//        Type typeList = new TypeToken<ArrayList<String>>() {}.getType();
+//        ArrayList<String> specialitiesList = gson.fromJson(nurse.getSpecialities(), typeList);
 
-        return nurse;
+        return request;
     }
 
     public String confirmUserToken(String token) {
 
         ConfirmationTokenUser confirmationTokenUser = confirmationTokenService.getUserToken(token)
-                .orElseThrow(()-> new IllegalStateException("Token not found"));
+                .orElseThrow(() -> new IllegalStateException("Token not found"));
 
-        if(confirmationTokenUser.getConfirmedAt() !=null)
+        if (confirmationTokenUser.getConfirmedAt() != null)
             throw new IllegalStateException("Email already verified");
 
         LocalDateTime expiresAt = confirmationTokenUser.getExpiresAt();
 
-        if(expiresAt.isBefore(LocalDateTime.now()))
+        if (expiresAt.isBefore(LocalDateTime.now()))
             throw new IllegalStateException("Token expired");
 
         confirmationTokenService.setUserConfirmedAt(token);
@@ -112,26 +113,27 @@ public class RegistrationService {
         return "Email Verified";
     }
 
-    public String confirmNurseToken(String token) {
 
-        ConfirmationTokenNurse confirmationTokenNurse = confirmationTokenService.getNurseToken(token)
-                .orElseThrow(()-> new IllegalStateException("Token not found"));
-
-        if(confirmationTokenNurse.getConfirmedAt() !=null)
-            throw new IllegalStateException("Email already verified");
-
-        LocalDateTime expiresAt = confirmationTokenNurse.getExpiresAt();
-
-        if(expiresAt.isBefore(LocalDateTime.now()))
-            throw new IllegalStateException("Token expired");
-
-        confirmationTokenService.setNurseConfirmedAt(token);
-
-        nurseService.enableNurse(confirmationTokenNurse.getNurse().getEmail());
-
-        return "Email Verified";
-    }
-
+//    public String confirmNurseToken(String token) {
+//
+//        ConfirmationTokenNurse confirmationTokenNurse = confirmationTokenService.getNurseToken(token)
+//                .orElseThrow(()-> new IllegalStateException("Token not found"));
+//
+//        if(confirmationTokenNurse.getConfirmedAt() !=null)
+//            throw new IllegalStateException("Email already verified");
+//
+//        LocalDateTime expiresAt = confirmationTokenNurse.getExpiresAt();
+//
+//        if(expiresAt.isBefore(LocalDateTime.now()))
+//            throw new IllegalStateException("Token expired");
+//
+//        confirmationTokenService.setNurseConfirmedAt(token);
+//
+//        nurseService.enableNurse(confirmationTokenNurse.getNurse().getEmail());
+//
+//        return "Email Verified";
+//    }
+//
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

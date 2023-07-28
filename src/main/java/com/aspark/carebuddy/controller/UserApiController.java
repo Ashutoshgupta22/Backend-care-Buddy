@@ -2,7 +2,9 @@ package com.aspark.carebuddy.controller;
 
 import com.aspark.carebuddy.api.request.BookServiceRequest;
 import com.aspark.carebuddy.api.request.LocationData;
+import com.aspark.carebuddy.api.response.NurseResponse;
 import com.aspark.carebuddy.model.nurse.Nurse;
+import com.aspark.carebuddy.model.nurse.NurseService;
 import com.aspark.carebuddy.model.user.User;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.model.user.UserService;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class UserApiController {
 
     UserService userService;
+    NurseService nurseService;
 
     @PostMapping("/set-firebase-token/{email}")
     public Boolean setUserFirebaseToken(@PathVariable String email,
@@ -50,9 +53,9 @@ public class UserApiController {
     }
 
     @GetMapping("get-top-nurses/{pincode}")
-    public ArrayList<Nurse> getTopNurses(@PathVariable String pincode) {
+    public ArrayList<NurseResponse> getTopNurses(@PathVariable String pincode) {
 
-        return userService.getTopNurses(pincode);
+        return nurseService.getTopNurses(pincode);
     }
 
 }

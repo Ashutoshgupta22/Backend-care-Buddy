@@ -2,6 +2,7 @@ package com.aspark.carebuddy.controller;
 
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.request.LoginRequest;
+import com.aspark.carebuddy.api.response.NurseResponse;
 import com.aspark.carebuddy.model.nurse.Nurse;
 import com.aspark.carebuddy.model.nurse.NurseService;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class NurseApiController {
     public Boolean setNurseFirebaseToken(@PathVariable String email,
                                         @RequestBody String firebaseToken) {
 
+        // token received is in double quotes, remove them
         if (firebaseToken.startsWith("\"") && firebaseToken.endsWith("\"")){
             firebaseToken = firebaseToken.replaceAll("\"","");
         }
@@ -28,7 +30,7 @@ public class NurseApiController {
     }
 
     @PostMapping("login")
-    ResponseEntity<Nurse> loginNurse(@RequestBody LoginRequest loginRequest) {
+    ResponseEntity<NurseResponse> loginNurse(@RequestBody LoginRequest loginRequest) {
 
         System.out.println("Received login request: "+loginRequest.toString());
         return nurseService.loginNurse(loginRequest);
@@ -38,6 +40,12 @@ public class NurseApiController {
     boolean nurseSaveLocation(@RequestBody LocationData locationData) {
 
         return nurseService.nurseSaveLocation(locationData);
+    }
+
+    @GetMapping(path = "confirm")
+    public String confirmNurse(@RequestParam("token") String token){
+
+        return nurseService.confirmNurseToken(token);
     }
 
 

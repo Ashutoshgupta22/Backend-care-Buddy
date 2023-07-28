@@ -1,6 +1,7 @@
 package com.aspark.carebuddy.model.user;
 
 import com.aspark.carebuddy.api.request.LocationData;
+import com.aspark.carebuddy.api.response.NurseResponse;
 import com.aspark.carebuddy.exception.EmailExistsException;
 import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.firebase.FirebaseCloudMessaging;
@@ -29,7 +30,6 @@ public class UserService implements UserDetailsService {
 
     public static final String USER_NOT_FOUND_MSG = "user with email %s not found";
 
-    private final NurseService nurseService;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
@@ -125,20 +125,21 @@ public class UserService implements UserDetailsService {
 
         System.out.println("pincode="+pincode);
 
-        ArrayList<Nurse> nurseList = nurseService.getNurseAtPincode(pincode);
+      //  ArrayList<Nurse> nurseList = nurseService.getNurseAtPincode(pincode);
 
         //TODO if nurseList is empty or null
-        assert nurseList !=null;
-        assert !nurseList.isEmpty();
-        System.out.println("nurseList size="+nurseList.size());
-        System.out.println("nurseList= "+ nurseList.get(0).toString());
+//        assert nurseList !=null;
+//        assert !nurseList.isEmpty();
+//        System.out.println("nurseList size="+nurseList.size());
+//        System.out.println("nurseList= "+ nurseList.get(0).toString());
+//
+//        Nurse selectedNurse = nurseList.get(0);
+//        String firebaseToken = selectedNurse.getFirebaseToken();
+//
+//        firebaseCloudMessaging.sendNotification(firebaseToken);
 
-        Nurse selectedNurse = nurseList.get(0);
-        String firebaseToken = selectedNurse.getFirebaseToken();
-
-        firebaseCloudMessaging.sendNotification(firebaseToken);
-
-        return selectedNurse;
+        //return selectedNurse;
+        return  null;
     }
 
     public Boolean setFirebaseToken(String email, String firebaseToken) {
@@ -147,9 +148,9 @@ public class UserService implements UserDetailsService {
         return success == 1;
     }
 
-    public ArrayList<Nurse> getTopNurses(String pincode) {
-
-        System.out.println("Getting top nurses");
-        return  nurseService.getTopNurses(pincode);
-    }
+//    public ArrayList<NurseResponse> getTopNurses(String pincode) {
+//
+//        System.out.println("Getting top nurses");
+//        return  nurseService.getTopNurses(pincode);
+//    }
 }

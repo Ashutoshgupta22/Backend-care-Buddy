@@ -18,7 +18,7 @@ public class RegistrationController {
     }
 
     @PostMapping("nurse/signup")
-    public Nurse registerNurse(@RequestBody RegistrationRequest request) {
+    public RegistrationRequest registerNurse(@RequestBody RegistrationRequest request) {
 
         return registrationService.signupNurse(request);
     }
@@ -28,9 +28,5 @@ public class RegistrationController {
         return registrationService.confirmUserToken(token);
     }
 
-    @GetMapping(path = "confirm-nurse")
-    public String confirmNurse(@RequestParam("token") String token){
 
-        return registrationService.confirmNurseToken(token);
-    }
 }
