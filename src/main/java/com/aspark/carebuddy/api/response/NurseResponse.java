@@ -9,6 +9,7 @@ import java.util.ArrayList;
 @Getter
 public class NurseResponse {
 
+    private int id;
     private String firstName;
     private String lastName;
     private int age;
@@ -16,11 +17,10 @@ public class NurseResponse {
     private String biography;
     private String qualifications;
     private ArrayList<String> specialities;
-    private int Experience;
+    private int experience;
     private double rating;
     private int patientNo;
     private String email;
-    private String password;
     private String pincode;
     private Double latitude;
     private Double longitude;

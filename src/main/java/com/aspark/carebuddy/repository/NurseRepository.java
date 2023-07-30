@@ -1,5 +1,6 @@
 package com.aspark.carebuddy.repository;
 
+import com.aspark.carebuddy.api.response.NurseResponse;
 import com.aspark.carebuddy.model.nurse.Nurse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public interface NurseRepository extends JpaRepository<Nurse, Integer> {
 
     Optional<Nurse> findByEmail(String email);
+    Optional<Nurse> findById(int id);
 
     @Transactional
     @Modifying

@@ -16,6 +16,12 @@ public class NurseApiController {
 
     NurseService nurseService;
 
+    @GetMapping("id/{id}")
+    public ResponseEntity<NurseResponse> getNurseById(@PathVariable int id) {
+
+        return nurseService.getNurseById(id);
+    }
+
     @PostMapping("/set-firebase-token/{email}")
     public Boolean setNurseFirebaseToken(@PathVariable String email,
                                         @RequestBody String firebaseToken) {
