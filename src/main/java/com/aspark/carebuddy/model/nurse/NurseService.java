@@ -40,6 +40,19 @@ public class NurseService {
 				.orElseThrow(() -> new EmailNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
 	}
 
+	public ResponseEntity<NurseResponse> getNurseById(int id) {
+
+		boolean isNursePresent = nurseRepository.findById(id).isPresent();
+
+		if (isNursePresent) {
+			Nurse nurse = nurseRepository.findById(id).get();
+
+			return ResponseEntity.ok(parseSpecialitiesJson(nurse));
+		}
+		else
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	}
+
 
 	public ResponseEntity<NurseResponse> loginNurse(LoginRequest loginRequest) {
 
@@ -232,6 +245,7 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		// parse json string to arraylist
 		ArrayList<String> specialitiesList = gson.fromJson(nurse.getSpecialities(), typeList);
 
+		response.setId(nurse.getId());
 		response.setFirstName(nurse.getFirstName());
 		response.setLastName(nurse.getLastName());
 		response.setAge(nurse.getAge());
@@ -249,5 +263,6 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 
 		return response;
 	}
+
 
 }
