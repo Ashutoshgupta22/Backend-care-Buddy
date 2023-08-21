@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -45,11 +44,11 @@ public class UserApiController {
         return userService.getUserData(email);
     }
 
-    @PostMapping("book-service")
-    public Nurse bookService(@RequestBody BookServiceRequest request){
+    @PostMapping("book-appointment")
+    public Nurse bookAppointment(@RequestBody BookServiceRequest request){
 
-        System.out.println("book service api call received for "+request.getEmail());
-        return userService.bookService(request.getEmail());
+        System.out.println("book appointment api call received for "+request.getUserEmail());
+        return userService.bookAppointment(request.getUserEmail(), request.getNurseId());
     }
 
     @GetMapping("get-top-nurses/{pincode}")

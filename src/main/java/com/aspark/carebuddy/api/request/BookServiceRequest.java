@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class BookServiceRequest {
 
-    private String email;
+    private String userEmail;
+    private int nurseId;
 
 }
