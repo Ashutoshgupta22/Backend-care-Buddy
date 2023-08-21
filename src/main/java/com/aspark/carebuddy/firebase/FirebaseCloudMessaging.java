@@ -10,17 +10,17 @@ import com.google.firebase.messaging.Notification;
 public class FirebaseCloudMessaging {
 
    // @SneakyThrows
-    public void sendNotification(String registrationToken) {
+    public void sendNotification(String firebaseToken) {
 
         System.out.println("FCM sendNotification called ");
-        System.out.println("registration token: " + registrationToken);
+        System.out.println("registration token: " + firebaseToken);
 
         Message notification = Message.builder()
                 .setNotification(Notification.builder()
-                        .setTitle("Service Request")
-                        .setBody("Someone needs your service")
+                        .setTitle("Booking Request")
+                        .setBody("Someone requires your service")
                         .build())
-                .setToken(registrationToken)
+                .setToken(firebaseToken)
                 .build();
 
         try {
@@ -31,7 +31,5 @@ public class FirebaseCloudMessaging {
             System.out.println("FCM Error: " + e);
             throw new FirebaseException(e);
         }
-
-
     }
 }

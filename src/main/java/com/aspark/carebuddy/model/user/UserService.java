@@ -9,6 +9,7 @@ import com.aspark.carebuddy.model.nurse.Nurse;
 import com.aspark.carebuddy.model.nurse.NurseService;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenService;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenUser;
+import com.aspark.carebuddy.repository.NurseRepository;
 import com.aspark.carebuddy.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -30,6 +28,7 @@ public class UserService implements UserDetailsService {
 
     public static final String USER_NOT_FOUND_MSG = "user with email %s not found";
 
+    private final NurseRepository nurseRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
@@ -39,6 +38,15 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EmailNotFoundException(String.format(USER_NOT_FOUND_MSG,email)));
+    }
+
+    private Nurse loadNurseById(int nurseId) {
+
+        boolean isNursePresent = nurseRepository.findById(nurseId).isPresent();
+        if (isNursePresent)
+            return nurseRepository.findById(nurseId).get();
+
+        return null;
     }
 
     public String signUpUser(User user) {
@@ -118,28 +126,16 @@ public class UserService implements UserDetailsService {
         return ResponseEntity.ok(user);
     }
 
-    public Nurse bookService(String email) {
+    public Nurse bookAppointment(String userEmail, int nurseId) {
 
-        User user = (User) loadUserByUsername(email);
-        String pincode = user.getPincode();
+        User user = (User) loadUserByUsername(userEmail);
+        Nurse nurse = loadNurseById(nurseId);
 
-        System.out.println("pincode="+pincode);
+        if (nurse != null) {
+            firebaseCloudMessaging.sendNotification(nurse.getFirebaseToken());
+        }
 
-      //  ArrayList<Nurse> nurseList = nurseService.getNurseAtPincode(pincode);
-
-        //TODO if nurseList is empty or null
-//        assert nurseList !=null;
-//        assert !nurseList.isEmpty();
-//        System.out.println("nurseList size="+nurseList.size());
-//        System.out.println("nurseList= "+ nurseList.get(0).toString());
-//
-//        Nurse selectedNurse = nurseList.get(0);
-//        String firebaseToken = selectedNurse.getFirebaseToken();
-//
-//        firebaseCloudMessaging.sendNotification(firebaseToken);
-
-        //return selectedNurse;
-        return  null;
+        return nurse;
     }
 
     public Boolean setFirebaseToken(String email, String firebaseToken) {
