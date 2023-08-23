@@ -39,7 +39,6 @@ public class User implements UserDetails {
 	@NonNull
 	@Column(name = "last_name")
 	private String lastName;
-	@NonNull
 	private int age;
 
 	private double latitude;
