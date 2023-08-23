@@ -7,7 +7,9 @@ import com.aspark.carebuddy.model.nurse.Nurse;
 import com.aspark.carebuddy.model.nurse.NurseService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @RequestMapping("api/nurse")
@@ -52,6 +54,14 @@ public class NurseApiController {
     public String confirmNurse(@RequestParam("token") String token){
 
         return nurseService.confirmNurseToken(token);
+    }
+
+    @PostMapping("upload-profile-pic")
+    public ResponseEntity<String> uploadProfilePic(
+            @RequestPart("imageFile")MultipartFile imageFile,
+            @RequestParam("nurseId") int nurseId) {
+
+        return nurseService.uploadProfilePic(imageFile, nurseId);
     }
 
 

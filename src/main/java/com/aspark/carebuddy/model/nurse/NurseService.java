@@ -8,6 +8,7 @@ import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenNurse;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenService;
 import com.aspark.carebuddy.repository.NurseRepository;
+import com.aspark.carebuddy.service.FileStorageService;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
@@ -16,10 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 import static com.aspark.carebuddy.model.user.UserService.USER_NOT_FOUND_MSG;
@@ -32,6 +35,7 @@ public class NurseService {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	private ConfirmationTokenService confirmationTokenService;
 	private final EmailSender emailSender;
+	private FileStorageService fileStorageService;
 
 
 	public Nurse loadNurseByEmail(String email) throws EmailNotFoundException {
@@ -264,5 +268,20 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		return response;
 	}
 
+	public ResponseEntity<String> uploadProfilePic(MultipartFile imageFile, int nurseId) {
 
+		System.out.println("Uploading nurse profile pic");
+
+		if (imageFile.isEmpty())
+			return ResponseEntity.badRequest().body("Image is required");
+
+		if (nurseId == -1)
+			return ResponseEntity.badRequest().body("Nurse id is required");
+
+		String fileName = UUID.randomUUID() + "-" + imageFile.getOriginalFilename();
+
+		String fileUrl = fileStorageService.storeFile(imageFile, fileName, nurseId);
+
+		return ResponseEntity.ok("profile pic uploaded- "+ fileUrl);
+	}
 }

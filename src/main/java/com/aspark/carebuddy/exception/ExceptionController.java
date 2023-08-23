@@ -12,4 +12,14 @@ public class ExceptionController {
 
         return ResponseEntity.internalServerError().body("FCM error: "+e);
     }
+
+    @ExceptionHandler(value = FileStorageException.class)
+    public ResponseEntity<String> exception(FileStorageException e) {
+        return ResponseEntity.internalServerError().body("File storage error: "+e);
+    }
+
+    @ExceptionHandler(value = FilesNotFoundException.class)
+    public ResponseEntity<String> exception(FilesNotFoundException e) {
+        return ResponseEntity.internalServerError().body("File not found: "+e);
+    }
 }
