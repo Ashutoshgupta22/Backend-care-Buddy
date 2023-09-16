@@ -18,7 +18,7 @@ public class NurseApiController {
 
     NurseService nurseService;
 
-    @GetMapping("id/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<NurseResponse> getNurseById(@PathVariable int id) {
 
         return nurseService.getNurseById(id);
@@ -58,7 +58,7 @@ public class NurseApiController {
 
     @PostMapping("upload-profile-pic")
     public ResponseEntity<String> uploadProfilePic(
-            @RequestPart("imageFile")MultipartFile imageFile,
+            @RequestPart("image")MultipartFile imageFile,
             @RequestParam("nurseId") int nurseId) {
 
         return nurseService.uploadProfilePic(imageFile, nurseId);

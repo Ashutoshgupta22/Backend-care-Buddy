@@ -52,7 +52,7 @@ public class FileStorageService {
 
     public Path getNurseFileStorageLocation(int nurseId) {
 
-        Path nurseDir = Path.of(uploadDir,"nurse", "profile-pic", String.valueOf(nurseId));
+        Path nurseDir = Path.of(uploadDir,"nurse", String.valueOf(nurseId), "profile_pic");
 
         if (! Files.exists(nurseDir)) {
             try {
