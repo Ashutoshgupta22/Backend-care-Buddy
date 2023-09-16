@@ -3,6 +3,7 @@ package com.aspark.carebuddy.model.nurse;
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.request.LoginRequest;
 import com.aspark.carebuddy.api.response.NurseResponse;
+import com.aspark.carebuddy.aws.ImageUploadService;
 import com.aspark.carebuddy.email.EmailSender;
 import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenNurse;
@@ -36,6 +37,7 @@ public class NurseService {
 	private ConfirmationTokenService confirmationTokenService;
 	private final EmailSender emailSender;
 	private FileStorageService fileStorageService;
+	private ImageUploadService imageUploadService;
 
 
 	public Nurse loadNurseByEmail(String email) throws EmailNotFoundException {
@@ -270,7 +272,7 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 
 	public ResponseEntity<String> uploadProfilePic(MultipartFile imageFile, int nurseId) {
 
-		System.out.println("Uploading nurse profile pic");
+		System.out.println("Uploading nurse profile pic nurseId-"+nurseId);
 
 		if (imageFile.isEmpty())
 			return ResponseEntity.badRequest().body("Image is required");
@@ -280,7 +282,8 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 
 		String fileName = UUID.randomUUID() + "-" + imageFile.getOriginalFilename();
 
-		String fileUrl = fileStorageService.storeFile(imageFile, fileName, nurseId);
+		//String fileUrl = fileStorageService.storeFile(imageFile, fileName, nurseId);
+		String fileUrl = imageUploadService.imageUpload(imageFile);
 
 		return ResponseEntity.ok("profile pic uploaded- "+ fileUrl);
 	}

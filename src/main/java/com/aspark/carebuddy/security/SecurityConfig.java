@@ -30,6 +30,10 @@ public class SecurityConfig  {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         //TODO for production add csrf token and enable csrf
+
+        //Enable CORS for web service to consume APIs
+        httpSecurity.cors();
+
         httpSecurity.csrf().disable()
                 .authorizeHttpRequests().antMatchers("/api/user/registration/**",
                         "/api/user/login","/api/user/save-location","/api/user/**","/api/user/book-service/**",
