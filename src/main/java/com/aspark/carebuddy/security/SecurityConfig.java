@@ -37,7 +37,7 @@ public class SecurityConfig  {
         httpSecurity.csrf().disable()
                 .authorizeHttpRequests().antMatchers("/api/user/registration/**",
                         "/api/user/login","/api/user/save-location","/api/user/**","/api/user/book-service/**",
-                        "/api/nurse/**")
+                        "/api/nurse/**", "/care-buddy-websocket")
                 .permitAll()
                 .anyRequest().authenticated().and().httpBasic();
 
