@@ -14,13 +14,28 @@ repositories {
 
 dependencies {
 
+	//smack
+	implementation 'org.igniterealtime.smack:smack-core:4.4.6'
+	implementation 'org.igniterealtime.smack:smack-tcp:4.4.6'
+	implementation 'org.igniterealtime.smack:smack-debug:4.4.6'
+	implementation 'org.igniterealtime.smack:smack-im:4.4.6'
+
+
 	//aws s3
 	implementation platform('software.amazon.awssdk:bom:2.20.56')
 	implementation 'software.amazon.awssdk:s3:'
 	implementation 'software.amazon.awssdk:sso'
 	implementation 'software.amazon.awssdk:ssooidc'
 	implementation 'org.slf4j:slf4j-simple:2.0.5'
-	testImplementation platform('org.junit:junit-bom:5.9.1')
+	implementation 'org.igniterealtime.smack:smack-xmlparser:4.4.6'
+	implementation 'org.igniterealtime.smack:smack-xmlparser-xpp3:4.4.6'
+	implementation 'org.igniterealtime.smack:smack-xmlparser-stax:4.4.6'
+	implementation 'org.igniterealtime.smack:smack:3.2.1'
+//	implementation 'maven:maven-jar-plugin:1.8.1.javadoc'
+//	implementation 'org.apache.maven.plugins:maven-jar-plugin:3.3.0'
+//	implementation 'net.nisgits.gradle:gradle-executable-jar-plugin:1.7.0'
+
+	testImplementation platform('org.junit:junit-bom:5.9.2')
 	testImplementation 'org.junit.jupiter:junit-jupiter'
 
 	//Firebase admin sdk
@@ -29,16 +44,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.projectlombok:lombok:1.18.26'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+//	implementation 'org.springframework.boot:spring-boot-gradle-plugin:3.1.2'
+
 	
 	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
-    testImplementation 'junit:junit:4.13.1'
-    testImplementation 'junit:junit:4.13.1'
-    testImplementation 'junit:junit:4.13.1'
-	testImplementation 'junit:junit:4.13.1'
-	annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.32'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'junit:junit:4.13.2'
+	testImplementation 'junit:junit:4.13.2'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
 	//implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '3.0.0'
