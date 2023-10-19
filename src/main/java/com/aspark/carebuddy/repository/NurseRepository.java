@@ -28,7 +28,8 @@ public interface NurseRepository extends JpaRepository<Nurse, Integer> {
             nativeQuery = true)
     ArrayList<Nurse> getNurseAtPincode(String pincode);
 
-    @Query(value = "SELECT * FROM nurse where pincode=?1 and rating >= 4.5",
+//    @Query(value = "SELECT * FROM nurse where pincode=?1 and rating >= 4.5",
+    @Query(value = "SELECT * FROM nurse where pincode=?1",
             nativeQuery = true)
     ArrayList<Nurse> getTopNurses(String pincode);
 

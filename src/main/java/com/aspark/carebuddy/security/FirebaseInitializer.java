@@ -16,12 +16,13 @@ public class FirebaseInitializer {
     @Bean
     public FirebaseApp initializeFirebaseApp() throws IOException {
 
-        System.out.println("Credentials: "+ System.getenv("GOOGLE_APPLICATION_CREDENTIALS"));
-
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.getApplicationDefault())
-                .build();
-        return FirebaseApp.initializeApp(options);
+//        System.out.println("Credentials: "+ System.getenv("GOOGLE_APPLICATION_CREDENTIALS"));
+//
+//        FirebaseOptions options = FirebaseOptions.builder()
+//                .setCredentials(GoogleCredentials.getApplicationDefault())
+//                .build();
+//        return FirebaseApp.initializeApp(options);
+        return null;
     }
 
     @Bean
