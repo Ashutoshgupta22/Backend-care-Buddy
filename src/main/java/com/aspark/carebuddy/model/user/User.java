@@ -50,7 +50,6 @@ public class User implements UserDetails {
 	@NonNull
 	private String password;
 
-	@NonNull
 	@Column(name = "firebase_token")
 	private String firebaseToken;
 
