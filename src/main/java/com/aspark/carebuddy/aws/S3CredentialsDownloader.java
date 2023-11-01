@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class S3CredentialsDownloader {
@@ -22,6 +23,7 @@ public class S3CredentialsDownloader {
     private final String bucketName = "care-buddy";
     private final String objectKey = "credentials/care-buddy-2-de09115d9cd4.json";
     private final String localFilePath = "firebaseCredentials.json";
+    private final String targetDirectory = "data/download";
 
     public void credentialDownload() {
 
@@ -45,8 +47,16 @@ public class S3CredentialsDownloader {
             byte[] data = responseBytes.asByteArray();
 
             // Get the path to save the file in the resources directory
-            ClassLoader classLoader = getClass().getClassLoader();
-            Path filePath = Paths.get(classLoader.getResource(localFilePath).toURI());
+//            ClassLoader classLoader = getClass().getClassLoader();
+//            Path filePath = Paths.get(Objects.requireNonNull(classLoader.getResource(localFilePath)).toURI());
+
+            File directory = new File(targetDirectory);
+            if (!directory.exists())
+                directory.mkdirs();
+
+
+            File file = new File(directory,"firebaseCredentials.json");
+            Path filePath = file.toPath();
 
             //write data to file
             try (OutputStream os = new FileOutputStream(filePath.toFile())) {
@@ -71,7 +81,8 @@ public class S3CredentialsDownloader {
 
             }
         }
-        catch (S3Exception | IOException | URISyntaxException e) {
+        catch (S3Exception | IOException e) {
+//        catch (S3Exception | IOException | URISyntaxException e) {
             System.err.println("Error credentialDownload - "+e.getMessage());
         }
     }
