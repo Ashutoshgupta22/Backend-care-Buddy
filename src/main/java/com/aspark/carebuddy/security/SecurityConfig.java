@@ -1,6 +1,5 @@
 package com.aspark.carebuddy.security;
 
-import com.aspark.carebuddy.firebase.FirebaseCloudMessaging;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.model.user.UserService;
 import org.springframework.context.annotation.Bean;

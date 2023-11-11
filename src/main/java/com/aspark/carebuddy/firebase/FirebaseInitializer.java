@@ -1,4 +1,4 @@
-package com.aspark.carebuddy.security;
+package com.aspark.carebuddy.firebase;
 
 import com.aspark.carebuddy.aws.S3CredentialsDownloader;
 import com.aspark.carebuddy.firebase.FirebaseCloudMessaging;
