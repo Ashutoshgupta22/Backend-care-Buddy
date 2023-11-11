@@ -3,6 +3,7 @@ package com.aspark.carebuddy.controller;
 import com.aspark.carebuddy.api.request.BookServiceRequest;
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.response.NurseResponse;
+import com.aspark.carebuddy.chat.XMPPService;
 import com.aspark.carebuddy.model.nurse.Nurse;
 import com.aspark.carebuddy.model.nurse.NurseService;
 import com.aspark.carebuddy.model.user.User;
@@ -19,15 +20,16 @@ import java.util.ArrayList;
 @RequestMapping("api/user")
 public class UserApiController {
 
-    UserService userService;
-    NurseService nurseService;
+    private final UserService userService;
+    private final NurseService nurseService;
+    private final XMPPService service;
 
     @PostMapping("/set-firebase-token/{email}")
     public Boolean setUserFirebaseToken(@PathVariable String email,
                                         @RequestBody String firebaseToken) {
 
-        if (firebaseToken.startsWith("\"") && firebaseToken.endsWith("\"")){
-           firebaseToken = firebaseToken.replaceAll("\"","");
+        if (firebaseToken.startsWith("\"") && firebaseToken.endsWith("\"")) {
+            firebaseToken = firebaseToken.replaceAll("\"", "");
         }
         return userService.setFirebaseToken(email, firebaseToken);
 
@@ -46,9 +48,9 @@ public class UserApiController {
     }
 
     @PostMapping("book-appointment")
-    public Nurse bookAppointment(@RequestBody BookServiceRequest request){
+    public Nurse bookAppointment(@RequestBody BookServiceRequest request) {
 
-        System.out.println("book appointment api call received for "+request.getUserEmail());
+        System.out.println("book appointment api call received for " + request.getUserEmail());
         return userService.bookAppointment(request.getUserEmail(), request.getNurseId());
     }
 
