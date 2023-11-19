@@ -4,6 +4,7 @@ import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.request.LoginRequest;
 import com.aspark.carebuddy.api.response.NurseResponse;
 import com.aspark.carebuddy.aws.ImageUploadService;
+import com.aspark.carebuddy.chat.XMPPService;
 import com.aspark.carebuddy.email.EmailSender;
 import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.registration.token.ConfirmationTokenNurse;
@@ -38,7 +39,7 @@ public class NurseService {
 	private final EmailSender emailSender;
 	private FileStorageService fileStorageService;
 	private ImageUploadService imageUploadService;
-
+	private XMPPService xmppService;
 
 	public Nurse loadNurseByEmail(String email) throws EmailNotFoundException {
 
@@ -111,6 +112,9 @@ public ArrayList<Nurse> getNurseAtPincode(String pincode){
 		String encodedPassword = bCryptPasswordEncoder.encode(nurse.getPassword());
 		nurse.setPassword(encodedPassword);
 		Nurse savedNurse = nurseRepository.save(nurse);
+		//TODO creating jid is slow, register user in DB and return value,
+		// do not wait to register in ejabberd, do it asynchronously.
+		xmppService.createJid("nurse"+ savedNurse.getId());
 
 		String token = UUID.randomUUID().toString();
 		ConfirmationTokenNurse confirmationTokenNurse = new ConfirmationTokenNurse(token,

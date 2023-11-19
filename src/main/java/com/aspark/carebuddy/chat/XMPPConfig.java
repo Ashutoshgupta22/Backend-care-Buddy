@@ -17,11 +17,11 @@ public class XMPPConfig {
 
         try {
             return XMPPTCPConnectionConfiguration.builder()
-                    .setUsernameAndPassword("user1","user1")
+                    //.setUsernameAndPassword("user1","user1")
                     .setXmppDomain("aspark-care-buddy.ap-south-1.elasticbeanstalk.com")
                     .setHost("localhost")
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible)
-                    .setConnectTimeout(300)
+                    .setConnectTimeout(5000)
                     .setPort(5222)
                     .build();
         } catch (XmppStringprepException e) {
@@ -33,5 +33,4 @@ public class XMPPConfig {
     public XMPPTCPConnection xmpptcpConnection(XMPPTCPConnectionConfiguration configuration) {
         return new XMPPTCPConnection(configuration);
     }
-
 }
