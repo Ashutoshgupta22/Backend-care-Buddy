@@ -2,6 +2,7 @@ package com.aspark.carebuddy.model.user;
 
 import com.aspark.carebuddy.api.request.LocationData;
 import com.aspark.carebuddy.api.response.NurseResponse;
+import com.aspark.carebuddy.chat.XMPPService;
 import com.aspark.carebuddy.exception.EmailExistsException;
 import com.aspark.carebuddy.exception.EmailNotFoundException;
 import com.aspark.carebuddy.firebase.FirebaseCloudMessaging;
@@ -33,6 +34,7 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final FirebaseCloudMessaging firebaseCloudMessaging ;
+    private final XMPPService xmppService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws EmailNotFoundException {
@@ -61,7 +63,10 @@ public class UserService implements UserDetailsService {
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        //TODO creating jid is slow, register user in DB and return value,
+        // do not wait to register in ejabberd, do it asynchronously.
+        xmppService.createJid("user"+ savedUser.getId());
 
       String  token = UUID.randomUUID().toString();
         ConfirmationTokenUser confirmationTokenUser = new ConfirmationTokenUser(token,
@@ -120,9 +125,7 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<User> getUserData(String email) {
 
         System.out.println("Getting user data");
-
         User user = (User) loadUserByUsername(email);
-
         return ResponseEntity.ok(user);
     }
 

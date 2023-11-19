@@ -59,5 +59,4 @@ public class UserApiController {
 
         return nurseService.getTopNurses(pincode);
     }
-
 }
