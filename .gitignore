@@ -37,6 +37,7 @@ out/
 ### VS Code ###
 .vscode/
 
+
 # Ignore Firebase Credentials
 data/download/firebaseCredentials.json
 
