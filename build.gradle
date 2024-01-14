@@ -13,14 +13,14 @@ repositories {
 	mavenCentral()
 }
 
-//copy the jar file created in build dir to root dir
-tasks.register('copyJar', Copy) {
-	from 'build/libs'
-	into '../'
-	include '*.jar'
-}
-
-bootJar.finalizedBy('copyJar')
+////copy the jar file created in build dir to root dir
+//tasks.register('copyJar', Copy) {
+//	from 'build/libs'
+//	into '../'
+//	include '*.jar'
+//}
+//
+//bootJar.finalizedBy('copyJar')
 
 
 dependencies {
