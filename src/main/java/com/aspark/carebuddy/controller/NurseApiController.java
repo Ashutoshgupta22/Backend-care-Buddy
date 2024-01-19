@@ -11,6 +11,7 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@CrossOrigin("http://127.0.0.1:5500")
 @AllArgsConstructor
 @RequestMapping("api/nurse")
 @RestController
