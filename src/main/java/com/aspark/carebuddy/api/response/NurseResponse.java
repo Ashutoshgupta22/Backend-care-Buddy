@@ -3,11 +3,12 @@ package com.aspark.carebuddy.api.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Setter
 @Getter
-public class NurseResponse {
+public class NurseResponse implements Serializable {
 
     private int id;
     private String firstName;
