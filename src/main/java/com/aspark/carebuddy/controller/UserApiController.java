@@ -9,6 +9,7 @@ import com.aspark.carebuddy.model.nurse.NurseService;
 import com.aspark.carebuddy.model.user.User;
 import lombok.AllArgsConstructor;
 import com.aspark.carebuddy.model.user.UserService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,6 +55,7 @@ public class UserApiController {
         return userService.bookAppointment(request.getUserEmail(), request.getNurseId());
     }
 
+    @Cacheable(value = "topNurses", key = "#pincode")
     @GetMapping("get-top-nurses/{pincode}")
     public ArrayList<NurseResponse> getTopNurses(@PathVariable String pincode) {
 
